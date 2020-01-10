@@ -7,7 +7,7 @@
 
 Name:           mod_wsgi
 Version:        3.4
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A WSGI interface for Python web applications in Apache
 Group:          System Environment/Libraries
 License:        ASL 2.0
@@ -17,6 +17,7 @@ Source1:        wsgi.conf
 Patch0:         mod_wsgi-3.4-connsbh.patch
 Patch1:         mod_wsgi-3.4-procexit.patch
 Patch2:         mod_wsgi-3.4-coredump.patch
+Patch3:         mod_wsgi-3.4-CVE-2014-0240.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  httpd-devel, python-devel, autoconf
 Requires: httpd-mmn = %{_httpd_mmn}
@@ -38,6 +39,7 @@ existing WSGI adapters for mod_python or CGI.
 %patch0 -p1 -b .connsbh
 %patch1 -p1 -b .procexit
 %patch2 -p1 -b .coredump
+%patch3 -p1 -b .cve20140240
 
 %build
 # Regenerate configure for -coredump patch change to configure.in
@@ -72,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 19 2014 Jan Kaluza <jkaluza@redhat.com> - 3.4-12
+- fix possible privilege escalation in setuid() (CVE-2014-0240)
+
 * Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 3.4-11
 - Mass rebuild 2014-01-24
 
