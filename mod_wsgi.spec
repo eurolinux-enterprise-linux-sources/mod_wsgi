@@ -1,6 +1,6 @@
 Name:           mod_wsgi
 Version:        3.2
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A WSGI interface for Python web applications in Apache
 
 Group:          System Environment/Libraries
@@ -9,6 +9,9 @@ URL:            http://modwsgi.org
 Source0:        http://modwsgi.googlecode.com/files/%{name}-%{version}.tar.gz
 Source1:        wsgi.conf
 Patch1: mod_wsgi-3.2-warnings.patch
+Patch2: mod_wsgi-3.2-nokeyerror.patch
+Patch3: mod_wsgi-3.2-sslfuncs.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  httpd-devel
@@ -26,6 +29,8 @@ existing WSGI adapters for mod_python or CGI.
 %prep
 %setup -q
 %patch1 -p1 -b .warnings
+%patch2 -p1 -b .nokeyerror
+%patch3 -p1 -b .sslfuncs
 
 %build
 export CFLAGS="-fno-strict-aliasing"
@@ -53,7 +58,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Wed Mar 17 2010 Joe Orton <jorton@redhat.com> - 3.2-3
+* Thu Aug 23 2012 Joe Orton <jorton@redhat.com> - 3.2-3
+- add mod_ssl.is_https, mod_ssl.var_lookup functions (#719409)
+
+* Wed Aug 15 2012 Joe Orton <jorton@redhat.com> - 3.2-2
+- fix "KeyError" exceptions (#670577)
+
+* Wed Mar 17 2010 Joe Orton <jorton@redhat.com> - 3.2-1
 - update to 3.2 (#574442)
 - require httpd-mmn (#574433)
 
