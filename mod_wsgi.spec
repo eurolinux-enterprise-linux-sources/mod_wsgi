@@ -7,19 +7,20 @@
 
 Name:           mod_wsgi
 Version:        3.4
-Release:        13%{?dist}.1
+Release:        18%{?dist}
 Summary:        A WSGI interface for Python web applications in Apache
 Group:          System Environment/Libraries
 License:        ASL 2.0
-URL:            http://modwsgi.org
-Source0:        http://modwsgi.googlecode.com/files/%{name}-%{version}.tar.gz
+URL:            http://www.modwsgi.org
+Source0:        https://github.com/GrahamDumpleton/%{name}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1:        wsgi.conf
 Patch0:         mod_wsgi-3.4-connsbh.patch
 Patch1:         mod_wsgi-3.4-procexit.patch
 Patch2:         mod_wsgi-3.4-coredump.patch
 Patch3:         mod_wsgi-3.4-CVE-2014-0240.patch
 Patch4:         mod_wsgi-3.4-deadlock.patch
-Patch5:         mod_wsgi-3.4-head-to-get.patch
+Patch5:         mod_wsgi-3.4-restart-segfault.patch
+Patch6:         mod_wsgi-3.4-head-to-get.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  httpd-devel, python-devel, autoconf
 Requires: httpd-mmn = %{_httpd_mmn}
@@ -43,7 +44,8 @@ existing WSGI adapters for mod_python or CGI.
 %patch2 -p1 -b .coredump
 %patch3 -p1 -b .cve20140240
 %patch4 -p1 -b .deadlock
-%patch5 -p1 -b .headtoget
+%patch5 -p1 -b .restartseg
+%patch6 -p1 -b .headtoget
 
 %build
 # Regenerate configure for -coredump patch change to configure.in
@@ -78,8 +80,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Thu Aug 30 2018 Luboš Uhliarik <luhliari@redhat.com> - 3.4-13.1
-- mod_wsgi forces HEAD to GET (#1623666)
+* Wed Aug 15 2018 Luboš Uhliarik <luhliari@redhat.com> - 3.4-18
+- mod_wsgi forces HEAD to GET (#1466799)
+
+* Mon Jun 18 2018 Luboš Uhliarik <luhliari@redhat.com> - 3.4-17
+- upstream URL reference in the rpm header is unreachable/dead (#1583920)
+
+* Mon Jun 18 2018 Luboš Uhliarik <luhliari@redhat.com> - 3.4-14
+- mod_wsgi segfault if loaded during a restart (#1445540)
 
 * Thu Dec 14 2017 Joe Orton <jorton@redhat.com> - 3.4-13
 - reduce chance of deadlock at process shutdown (#1493429)
