@@ -1,6 +1,6 @@
 Name:           mod_wsgi
 Version:        3.2
-Release:        3%{?dist}
+Release:        6%{?dist}
 Summary:        A WSGI interface for Python web applications in Apache
 
 Group:          System Environment/Libraries
@@ -11,6 +11,8 @@ Source1:        wsgi.conf
 Patch1: mod_wsgi-3.2-warnings.patch
 Patch2: mod_wsgi-3.2-nokeyerror.patch
 Patch3: mod_wsgi-3.2-sslfuncs.patch
+Patch4: mod_wsgi-3.4-CVE-2014-0240.patch
+Patch5: mod_wsgi-3.2-CVE-2014-0242.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -31,6 +33,8 @@ existing WSGI adapters for mod_python or CGI.
 %patch1 -p1 -b .warnings
 %patch2 -p1 -b .nokeyerror
 %patch3 -p1 -b .sslfuncs
+%patch4 -p1 -b .cve0240
+%patch5 -p1 -b .cve0242
 
 %build
 export CFLAGS="-fno-strict-aliasing"
@@ -58,6 +62,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Jun 11 2014 Jan Kaluza <jkaluza@redhat.com> - 3.2-6
+- fix for CVE-2014-0242 (#1104685)
+
+* Thu Jun 05 2014 Jan Kaluza <jkaluza@redhat.com> - 3.2-4
+- fix for CVE-2014-0240 (#1104687)
+
 * Thu Aug 23 2012 Joe Orton <jorton@redhat.com> - 3.2-3
 - add mod_ssl.is_https, mod_ssl.var_lookup functions (#719409)
 
