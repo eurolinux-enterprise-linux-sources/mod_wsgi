@@ -1,6 +1,6 @@
 Name:           mod_wsgi
 Version:        3.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A WSGI interface for Python web applications in Apache
 
 Group:          System Environment/Libraries
@@ -13,6 +13,7 @@ Patch2: mod_wsgi-3.2-nokeyerror.patch
 Patch3: mod_wsgi-3.2-sslfuncs.patch
 Patch4: mod_wsgi-3.4-CVE-2014-0240.patch
 Patch5: mod_wsgi-3.2-CVE-2014-0242.patch
+Patch6: mod_wsgi-3.2-signal-race.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -35,6 +36,7 @@ existing WSGI adapters for mod_python or CGI.
 %patch3 -p1 -b .sslfuncs
 %patch4 -p1 -b .cve0240
 %patch5 -p1 -b .cve0242
+%patch6 -p1 -b .signalrace
 
 %build
 export CFLAGS="-fno-strict-aliasing"
@@ -62,11 +64,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 15 2014 Jan Kaluza <jkaluza@redhat.com> - 3.2-7
+- fix crash on exit caused by race-condition in signals handling (#1008018)
+
 * Wed Jun 11 2014 Jan Kaluza <jkaluza@redhat.com> - 3.2-6
-- fix for CVE-2014-0242 (#1104685)
+- fix for CVE-2014-0242 (#1104686)
 
 * Thu Jun 05 2014 Jan Kaluza <jkaluza@redhat.com> - 3.2-4
-- fix for CVE-2014-0240 (#1104687)
+- fix for CVE-2014-0240 (#1104688)
 
 * Thu Aug 23 2012 Joe Orton <jorton@redhat.com> - 3.2-3
 - add mod_ssl.is_https, mod_ssl.var_lookup functions (#719409)
